@@ -54,16 +54,20 @@ $files = scandir(($filepath),2);
                     </thead>
                     <tbody>
                         <?php
+                        $tracked = array();
+                        $untracked = array();
                         foreach($files as $key => $value) {
                             if ( !in_array( $value, array( '.', '..' ) ) ) {
+                                $untracked[] = $value;
                             $sql = "select * from files where HASH ='".hash_file('md5', $filepath.'/'.$value)."'";
                             $ret = $db->query($sql);
                             while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
+                            $tracked[] = $row['FILE'].".".$row['EXTENSION'];
                             ?>
                         <tr>
-                            <td><?php echo $row['FILE']; ?></td>
-                            <td><?php echo $row['CONTENT']; ?></td>
-                            <td><?php echo $row['HASH']; ?></td>
+                            <td><?php echo $row['FILE'].".".$row['EXTENSION']; ?></td>
+                            <td><?php echo substr($row['CONTENT'], 0, 5)."[...]"; ?></td>
+                            <td><?php echo substr($row['HASH'], 0, 5)."[...]"; ?></td>
                             <td><?php echo $row['CREATED_AT']; ?></td>
                             <td><?php echo $row['UPDATED_AT']; ?></td>
                             <td><?php echo $row['DELETED_AT']; ?></td>
@@ -76,14 +80,36 @@ $files = scandir(($filepath),2);
                             </td>
                         </tr>
                         <?php
-                        }}}
-                        
+                            }}}
                         $db->close();
                         ?>
-                    
+                    <?php
+                    $untracked_files = array_diff($untracked, $tracked);
+                    if(count($untracked_files)){
+                    foreach($untracked_files as $k => $v){
+                    ?>
+                    <tr class="uk-alert-danger">
+                        <td><?php echo $v; ?></td>
+                        <td>Untracked file</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <ul class="uk-iconnav">
+                                <li><a title="Edit" href="tracked.php?name=<?php echo $v;?>" uk-icon="icon: file-edit"></a></li>
+                                <li><a title="Delete" href="#" uk-icon="icon: trash"></a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <?php }} ?>
                     </tbody>
+                    <caption>
+                        <?php 
+                            echo "Untracked files: ".count(array_diff($untracked, $tracked));
+                        ?>
+                    </caption>
                 </table>
-
         </div>
     </div>
 </body>
