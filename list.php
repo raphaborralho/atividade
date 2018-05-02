@@ -75,7 +75,7 @@ $files = scandir(($filepath),2);
                                 <ul class="uk-iconnav">
                                     <li><a title="Edit" href="update.php?id=<?php echo $row['ID'];?>" uk-icon="icon: file-edit"></a></li>
                                     <li><a title="Diff" href="diff.php?id=<?php echo $row['ID'];?>" uk-icon="icon: git-branch"></a></li>
-                                    <li><a title="Delete" href="#" uk-icon="icon: trash"></a></li>
+                                    <li><a title="Delete" href="delete.php?name=<?php echo $row['FILE'].".".$row['EXTENSION'];?>" uk-icon="icon: trash"></a></li>
                                 </ul>
                             </td>
                         </tr>
@@ -98,7 +98,7 @@ $files = scandir(($filepath),2);
                         <td>
                             <ul class="uk-iconnav">
                                 <li><a title="Edit" href="tracked.php?name=<?php echo $v;?>" uk-icon="icon: file-edit"></a></li>
-                                <li><a title="Delete" href="#" uk-icon="icon: trash"></a></li>
+                                <li><a title="Delete" href="delete.php?name=<?php echo $v;?>" uk-icon="icon: trash"></a></li>
                             </ul>
                         </td>
                     </tr>
